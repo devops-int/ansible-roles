@@ -1,0 +1,8 @@
+[web]
+ec2-instance ansible_host=44.203.167.117 ansible_user=ec2-user  ansible_ssh_private_key_file=/Users/administrator/Desktop/NewPair.pem
+
+[mysql-master] 
+ec2-instance ansible_host=44.203.167.117 ansible_user=ec2-user  ansible_ssh_private_key_file=/Users/administrator/Desktop/NewPair.pem
+
+[mysql-slave]
+ec2-instance2 ansible_host=18.233.97.116 ansible_user=ec2-user  ansible_ssh_private_key_file=/Users/administrator/Desktop/NewPair.pem

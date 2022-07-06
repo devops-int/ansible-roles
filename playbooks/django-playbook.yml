@@ -1,0 +1,11 @@
+
+---
+- name: Install Django
+  hosts: web
+  remote_user: ec2-user
+  become: true
+
+  roles:
+    - { role: django, project_name: 'mysite3' }
+
+  

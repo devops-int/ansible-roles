@@ -1,0 +1,56 @@
+---
+# tasks file for nginx
+
+- name: Install nginx
+  yum:
+    name: nginx
+    state: present
+
+- name: Start NGiNX
+  service:
+    name: nginx
+    state: started
+
+- name: create a directory for csr
+  file:
+    path: "{{ csr_base_path }}"
+    state: directory
+  tags: cert
+
+
+- name: generate a private key
+  community.crypto.openssl_privatekey:
+    path: "{{ private_key_path }}"
+    backup: yes
+  tags: cert
+
+- name: generate a CSR
+  community.crypto.openssl_csr:
+    privatekey_path: "{{ private_key_path }}"
+    path: "{{ csr_path }}"
+    backup: yes
+  tags: cer
+
+- name: generate a certificate
+  community.crypto.x509_certificate:
+    path: "{{ certificate_path }}"
+    privatekey_path: "{{ private_key_path }}"
+    csr_path: "{{ csr_path }}"
+    provider: selfsigned
+  tags: cert
+
+- name: setup redirect to https
+  copy:
+    content: 'return 301 https://$host$request_uri;'
+    dest: /etc/nginx/nginx.conf
+  
+- name: setup https server
+  template:
+    src: /Users/administrator/.ansible/roles/nginx/templates/https_server.conf.j2
+    dest: /etc/nginx/nginx.conf
+  
+- name: Restart nginx
+  systemd: 
+    name: nginx 
+    state: restarted 
+

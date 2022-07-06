@@ -1,0 +1,28 @@
+---
+# tasks file for replication-salve
+- name: install PyMySQL
+  pip: name=PyMySQL state=present
+
+- name: stop slave 
+  mysql_replication: 
+    login_user: root 
+    login_password: MyNewPass1! 
+    mode: stopreplica 
+
+- name: change the master 
+  mysql_replication: 
+    login_user: root 
+    login_password: MyNewPass1! 
+    mode: changeprimary 
+    master_host: 18.234.188.179 
+    master_log_file: mysql-bin.000004 
+    master_log_pos: 154 
+    master_user: replication 
+    master_password: MyNewPass1!
+  
+- name: start slave 
+  mysql_replication: 
+    login_user: root 
+    login_password: MyNewPass1! 
+    mode: startreplica 
+  
