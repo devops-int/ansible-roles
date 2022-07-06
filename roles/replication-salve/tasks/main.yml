@@ -6,23 +6,23 @@
 - name: stop slave 
   mysql_replication: 
     login_user: root 
-    login_password: MyNewPass1! 
+    login_password: * 
     mode: stopreplica 
 
 - name: change the master 
   mysql_replication: 
     login_user: root 
-    login_password: MyNewPass1! 
+    login_password: * 
     mode: changeprimary 
     master_host: 18.234.188.179 
     master_log_file: mysql-bin.000004 
     master_log_pos: 154 
     master_user: replication 
-    master_password: MyNewPass1!
+    master_password: *
   
 - name: start slave 
   mysql_replication: 
     login_user: root 
-    login_password: MyNewPass1! 
+    login_password: * 
     mode: startreplica 
   
