@@ -1,8 +1,5 @@
 ---
 - name: Replication Process
 
-  hosts: mysql-slave 
-  remote_user: ec2-user
-  become: true
   roles: 
     - role: replication-salve

@@ -1,9 +1,6 @@
 ---
 - name: Replication Process
 
-  hosts: mysql-master 
-  remote_user: ec2-user
-  become: true
   
   roles: 
     - role: replication-master
