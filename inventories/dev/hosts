@@ -1,0 +1,8 @@
+[web]
+ec2-instance
+
+[mysql-master]
+ec2-instance
+
+[mysql-slave]
+ec2-instance2

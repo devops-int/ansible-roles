@@ -1,7 +1,6 @@
 ---
 # defaults file for nginx
-vars:
-  private_key_path: /etc/pki/tls/private/mycert.key
-  certificate_path: /etc/pki/tls/certs/mycert.crt
-  csr_base_path: /etc/pki/tls/csr
-  csr_path: "{{ csr_base_path }}/mycert.csr" 
+private_key_path: /etc/pki/tls/private/mycert.key
+certificate_path: /etc/pki/tls/certs/mycert.crt
+csr_base_path: /etc/pki/tls/csr
+csr_path: "{{ csr_base_path }}/mycert.csr" 

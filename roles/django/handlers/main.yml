@@ -1,2 +1,6 @@
 ---
 # handlers file for django
+- name: Restart nginx
+  systemd: 
+    name: nginx.service 
+    state: restarted  
