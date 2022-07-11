@@ -1,5 +1,5 @@
 ---
-# tasks file for django
+tasks file for django
 
 - name: Creates directory
   file: "path=/home/{{project_name}} state=directory"
@@ -14,7 +14,7 @@
   command: "/home/{{project_name}}/env/bin/django-admin.py startproject {{project_name}} chdir=/home/{{project_name}}/"  
 
 - name: install gunicorn
-  pip:
+  pip: 
     name: gunicorn 
     state: present
 
@@ -25,13 +25,13 @@
 
 - name: setup gunicorn.service
   copy:
-    src: /Users/administrator/.ansible/roles/django/templates/gunicorn.service
-    dest: /etc/systemd/system/gunicorn.service
+    src: "{{path_gunicorn}}"
+    dest: "{{dest_gunicorn}}"
 
 - name:
   template:
-    src: /Users/administrator/.ansible/roles/django/templates/https_server.conf.j2
-    dest: /etc/nginx/nginx.conf
+    src: "{{src_https_server_conf}}"
+    dest: "{{dest_nginx}}"
   notify:
     - Restart nginx
 

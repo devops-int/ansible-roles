@@ -1,6 +1,6 @@
 ---
 - name: Replication Process
-
+  hosts: mysql-master
   
   roles: 
     - role: replication-master

@@ -1,0 +1,6 @@
+root_db: root
+login_password_db: *
+db_backup: /var/backup/db
+src_script_path: /Users/administrator/.ansible/roles/replication-master/templates/script.sh
+
+

@@ -5,14 +5,14 @@
 
 - name: stop slave 
   mysql_replication: 
-    login_user: root 
-    login_password: * 
+    login_user: "{{root_db}}" 
+    login_password: "{{login_password_db}}"  
     mode: stopreplica 
 
 - name: change the master 
   mysql_replication: 
-    login_user: root 
-    login_password: * 
+    login_user: "{{root_db}}" 
+    login_password: "{{login_password_db}}"  
     mode: changeprimary 
     master_host: *
     master_log_file: mysql-bin.000004 
@@ -22,7 +22,7 @@
   
 - name: start slave 
   mysql_replication: 
-    login_user: root 
-    login_password: * 
+    login_user: "{{root_db}}" 
+    login_password: "{{login_password_db}}"  
     mode: startreplica 
   

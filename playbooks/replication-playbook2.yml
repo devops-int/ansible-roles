@@ -1,5 +1,6 @@
 ---
 - name: Replication Process
-
+  hosts: mysql-slave
+   
   roles: 
     - role: replication-salve

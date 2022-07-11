@@ -1,6 +1,8 @@
 
 
-#user  nobody;
+user  nginx;
+error_log  /var/log/nginx/error.log;
+
 worker_processes  1;
 
 #error_log  logs/error.log;
@@ -82,39 +84,30 @@ http {
 
     }
     server {
-    listen       443 ssl http2 default_server;
-    listen       [::]:443 ssl http2 default_server;
-    server_name  _;
-    root         /usr/share/nginx/html;
-
-    ssl_certificate "/etc/pki/tls/certs/mycert.crt";
-    ssl_certificate_key "/etc/pki/tls/private/mycert.key";
-    ssl_session_cache shared:SSL:1m;
-    ssl_session_timeout  10m;
-    
-    ssl_prefer_server_ciphers on;
-
-    location /static/ {
-        root /home/{{project_name}};
+        server_name             _;
+        listen                  80;
+        return                  307 https://$host$request_uri;
     }
 
-    location / {
-        include proxy_params;
-        proxy_pass http://unix:/home{{project_name}}/{{project_name}}.sock;
-    }
+    server {
+  # Pass on requests to Gunicorn listening at http://localhost:8000
+        location / {
+          proxy_pass            http://localhost:8000;
+          proxy_set_header      Host $host;
+          proxy_set_header      X-Forwarded-Proto $scheme;
+          proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_redirect        off;
+        }
+        location /static {
+          autoindex             on;
+          alias                 /home/{{project_name}};
+        }
+        
+        listen 443 ssl;
+        ssl_certificate "/etc/pki/tls/certs/mycert.crt";
+        ssl_certificate_key "/etc/pki/tls/private/mycert.key";
 
-    location / {
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-	proxy_pass http://localhost:3000;
     }
-
-    error_page 404 /404.html;
-        location = /40x.html {
-    }
-
-    error_page 500 502 503 504 /50x.html;
-        location = /50x.html {
-    }
- }
 }
+
+  
