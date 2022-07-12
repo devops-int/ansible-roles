@@ -14,7 +14,7 @@
     login_user: "{{root_db}}" 
     login_password: "{{login_password_db}}"  
     mode: changeprimary 
-    master_host: *
+    master_host: 18.234.188.179 
     master_log_file: mysql-bin.000004 
     master_log_pos: 154 
     master_user: replication 

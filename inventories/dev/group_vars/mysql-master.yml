@@ -1,3 +1,11 @@
+path_gunicorn:  /Users/administrator/.ansible/roles/django/templates/gunicorn.service
+dest_gunicorn: /etc/systemd/system/gunicorn.service
+
+
+create_csr: /etc/pki/tls/csr
+src_https_server_conf_ngpl: /Users/administrator/.ansible/roles/nginx/templates/https_server.conf.j2
+dest_nginx_ngpl: /etc/nginx/nginx.conf
+
 root_db: root
 login_password_db: *
 db_backup: /var/backup/db

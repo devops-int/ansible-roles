@@ -3,7 +3,7 @@ DATE=`date +"%d_%b_%Y_%H%M"`
 SQLFILE=/var/backup/db/db_backup_${DATE}.sql
 DATABASE=Check_db
 USER=root
-PASSWORD="*"
+PASSWORD="MyNewPass1!"
  
 unalias rm     2> /dev/null
 rm ${SQLFILE}     2> /dev/null

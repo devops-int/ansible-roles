@@ -1,7 +1,6 @@
 path_gunicorn:  /Users/administrator/.ansible/roles/django/templates/gunicorn.service
 dest_gunicorn: /etc/systemd/system/gunicorn.service
-src_https_server_conf: /Users/administrator/.ansible/roles/django/templates/https_server.conf.j2
-dest_nginx: /etc/nginx/nginx.conf
+
 
 create_csr: /etc/pki/tls/csr
 src_https_server_conf_ngpl: /Users/administrator/.ansible/roles/nginx/templates/https_server.conf.j2
