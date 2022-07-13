@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=nginx
-Group=nginx
+Group=ec2-user
 WorkingDirectory=/home/mysite5/mysite5/
 ExecStart=/home/mysite5/env/bin/bin/gunicorn  --access-logfile - --workers 3 --bind unix:/home/mysite5/mysite5.sock  mysite5.wsgi:application
 
