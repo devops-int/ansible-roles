@@ -3,10 +3,10 @@ Description=gunicorn daemon
 After=network.target
 
 [Service]
-User=nginx
-Group=ec2-user
-WorkingDirectory=/home/mysite5/mysite5/
-ExecStart=/home/mysite5/env/bin/bin/gunicorn  --access-logfile - --workers 3 --bind unix:/home/mysite5/mysite5.sock  mysite5.wsgi:application
+User=root
+Group=root
+WorkingDirectory=/home/mysite10/mysite10/
+ExecStart=/home/mysite19/env/bin/bin/gunicorn  --access-logfile - --workers 3 --bind unix:/home/mysite10/mysite10.sock  mysite10.wsgi:application
 
 [Install]
 WantedBy=multi-user.target

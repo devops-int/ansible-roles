@@ -1,5 +1,5 @@
 ---
-tasks file for django
+#tasks file for django
 
 - name: Creates directory
   file: "path=/home/{{project_name}} state=directory"
@@ -14,8 +14,10 @@ tasks file for django
   command: "/home/{{project_name}}/env/bin/django-admin.py startproject {{project_name}} chdir=/home/{{project_name}}/"  
 
 - name: install gunicorn
-  pip: "name = gunicorn /home/{{project_name}}/env/bin/ chdir=/home/{{project_name}}"
+  pip: "name=gunicorn  virtualenv=/home/{{project_name}}/env/" 
 
+- name: run gunicorn
+  command: "exec /home/{{project_name}}/env/bin/gunicorn {{project_name}}:app"
 
 - name: chanage settings.py 
   lineinfile:
@@ -27,5 +29,32 @@ tasks file for django
     src: "{{path_gunicorn}}"
     dest: "{{dest_gunicorn}}"
 
+
+########################################### 
+# Setting it outside of venv 
+
+# - name: Creates directory
+#   file: "path=/home/{{project_name}} state=directory"
+
+# - name: install django 
+#   pip: 
+#     name: django==3.2.14
+#     chdir: /home/{{project_name}}/
+
+# - name: start project 
+#   command: "/usr/local/bin/django-admin.py startproject {{project_name}} chdir=/home/{{project_name}}/"
+
+# - name: install gunicorn
+#   pip: "name=gunicorn"
+
+# - name: chanage settings.py 
+#   lineinfile:
+#     path: /home/{{project_name}}/{{project_name}}/{{project_name}}/settings.py 
+#     line: ALLOWED_HOSTS = ['*']
+
+# - name: setup gunicorn.service
+#   copy:
+#     src: "{{path_gunicorn}}"
+#     dest: "{{dest_gunicorn}}"
 
 
