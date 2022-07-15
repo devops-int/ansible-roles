@@ -1,0 +1,100 @@
+---
+# tasks file for replication-all
+
+# - name: install PyMySQL
+#   pip3: name=PyMySQL state=present
+#   when: inventory_hostname in groups['mysql-master']
+
+  
+- name: Create the database
+  mysql_db: name=test-replication login_user="{{root_db}}" login_password="{{login_password_db}}"  state=present 
+  when: inventory_hostname in groups['mysql-master']
+  
+- name: Create the replication users 
+  mysql_user: 
+    login_user: "{{root_db}}" 
+    login_password: "{{login_password_db}}"  
+    name: replication 
+    host: "%" 
+    password: *
+    priv: "*.*:REPLICATION SLAVE"
+    state: present 
+  when: inventory_hostname in groups['mysql-master']
+
+- name: Get the current master servers replication status 
+  mysql_replication: 
+    login_user: "{{root_db}}" 
+    login_password: "{{login_password_db}}" 
+    mode: getprimary
+  register: information
+  when: inventory_hostname in groups['mysql-master']
+
+- name: show the status 
+  debug: 
+    var: information
+  when: inventory_hostname in groups['mysql-master']
+
+- name: make presistent var
+  set_fact:
+    information: "{{information}}"
+  when: inventory_hostname in groups['mysql-master']
+
+
+
+- name: Creates directory
+  file:
+    path: "{{db_backup}}"
+    mode: 0775
+    state: directory
+  when: inventory_hostname in groups['mysql-master']
+
+- name: Prepare the script
+  copy: 
+    src: "{{src_script_path_all}}"
+    dest: "{{db_backup}}"
+  when: inventory_hostname in groups['mysql-master']
+  
+- name: Execute the script
+  command: sh /var/backup/db/script.sh
+  when: inventory_hostname in groups['mysql-master']
+
+
+
+# tasks file for replication-salve
+# - name: install PyMySQL
+#   pip: name=PyMySQL state=present
+#   when: inventory_hostname in groups['mysql-slave']
+
+# - name: set the facts per host
+#   set_fact:
+#     new_information: "{{hostvars['mysql-master']['information']}}"
+#   when: inventory_hostname in groups['mysql-slave']
+
+- name: stop slave 
+  mysql_replication: 
+    login_user: "{{root_db}}" 
+    login_password: "{{login_password_db}}"  
+    mode: stopreplica 
+  when: inventory_hostname in groups['mysql-slave']
+
+- name: change the master 
+  mysql_replication: 
+    login_user: "{{root_db}}" 
+    login_password: "{{login_password_db}}"  
+    mode: changeprimary 
+    master_host: 44.203.167.117 
+    master_log_file: "{{hostvars['mysql-master'].information.File}}"
+    master_log_pos:  "{{hostvars['mysql-master'].information.Position}}"
+    master_user: replication 
+    master_password: *
+  when: inventory_hostname in groups['mysql-slave']
+
+  # mysql-bin.000004 , 154
+  
+- name: start slave 
+  mysql_replication: 
+    login_user: "{{root_db}}" 
+    login_password: "{{login_password_db}}"  
+    mode: startreplica 
+  when: inventory_hostname in groups['mysql-slave']
+  
