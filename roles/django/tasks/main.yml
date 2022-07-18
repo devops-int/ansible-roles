@@ -8,7 +8,7 @@
   yum: "name=python-virtualenv state=present" 
 
 - name: create virtualenv and install django in it
-  pip: "name=django virtualenv=/home/{{project_name}}/env virtualenv_command=virtualenv"
+  pip: "name=django===2.1.8 virtualenv=/home/{{project_name}}/env virtualenv_command=virtualenv"
 
 - name: install a django project
   command: "/home/{{project_name}}/env/bin/django-admin.py startproject {{project_name}} chdir=/home/{{project_name}}/"  
@@ -16,8 +16,8 @@
 - name: install gunicorn
   pip: "name=gunicorn  virtualenv=/home/{{project_name}}/env/" 
 
-- name: run gunicorn
-  command: "exec /home/{{project_name}}/env/bin/gunicorn {{project_name}}:app"
+# - name: run gunicorn
+#   command: "exec /home/{{project_name}}/env/bin/gunicorn {{project_name}}:app"
 
 - name: chanage settings.py 
   lineinfile:
@@ -28,6 +28,20 @@
   copy:
     src: "{{path_gunicorn}}"
     dest: "{{dest_gunicorn}}"
+
+- name: setup sqllite 1
+  command: "mv /usr/bin/sqlite3 /usr/bin/sqlite3_3.7.9"
+
+- name: setup sqllite 2
+  command: "ln -s /usr/local/bin/sqlite3 /usr/bin/sqlite3"
+
+- name: reload 
+  command: "sudo systemctl daemon-reload"
+
+- name: restart gunicorn
+  service: 
+    name: gunicorn
+    state: restarted 
 
 
 ########################################### 

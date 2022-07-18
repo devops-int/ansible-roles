@@ -5,8 +5,9 @@ After=network.target
 [Service]
 User=root
 Group=root
-WorkingDirectory=/home/mysite10/mysite10/
-ExecStart=/home/mysite19/env/bin/bin/gunicorn  --access-logfile - --workers 3 --bind unix:/home/mysite10/mysite10.sock  mysite10.wsgi:application
+WorkingDirectory=/home/mysite15/mysite15/
+Environment="PATH=/home/mysite15/env/bin"
+ExecStart=/home/mysite15/env/bin/gunicorn  --access-logfile - --workers 3 --bind unix:/home/mysite15/mysite15.sock  mysite15.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
