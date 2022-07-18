@@ -1,9 +1,9 @@
 ---
 # tasks file for replication-all
 
-# - name: install PyMySQL
-#   pip3: name=PyMySQL state=present
-#   when: inventory_hostname in groups['mysql-master']
+- name: install PyMySQL
+  pip3: name=PyMySQL state=present
+  when: inventory_hostname in groups['mysql-master']
 
   
 - name: Create the database
@@ -16,7 +16,7 @@
     login_password: "{{login_password_db}}"  
     name: replication 
     host: "%" 
-    password: *
+    password: * 
     priv: "*.*:REPLICATION SLAVE"
     state: present 
   when: inventory_hostname in groups['mysql-master']
@@ -34,13 +34,20 @@
     var: information
   when: inventory_hostname in groups['mysql-master']
 
-- name: make presistent var
-  set_fact:
-    information: "{{information}}"
-  when: inventory_hostname in groups['mysql-master']
+- name: "Add master return values to a dummy host"
+  add_host:
+    name: "master_value_holder"
+    master_log_file: "{{ information.File }}"
+    master_log_pos: "{{ information.Position }}"
 
-
-
+# - name: make presistent var
+#   set_fact:
+#     information: "{{information}}"
+  
+# - name: show info
+#   debug:
+#     var: information 
+  
 - name: Creates directory
   file:
     path: "{{db_backup}}"
@@ -58,16 +65,9 @@
   command: sh /var/backup/db/script.sh
   when: inventory_hostname in groups['mysql-master']
 
-
-
 # tasks file for replication-salve
 # - name: install PyMySQL
 #   pip: name=PyMySQL state=present
-#   when: inventory_hostname in groups['mysql-slave']
-
-# - name: set the facts per host
-#   set_fact:
-#     new_information: "{{hostvars['mysql-master']['information']}}"
 #   when: inventory_hostname in groups['mysql-slave']
 
 - name: stop slave 
@@ -82,9 +82,9 @@
     login_user: "{{root_db}}" 
     login_password: "{{login_password_db}}"  
     mode: changeprimary 
-    master_host: 44.203.167.117 
-    master_log_file: "{{hostvars['mysql-master'].information.File}}"
-    master_log_pos:  "{{hostvars['mysql-master'].information.Position}}"
+    master_host: *
+    master_log_file: "{{hostvars['master_value_holder']['master_log_file']}}"
+    master_log_pos:  "{{hostvars['master_value_holder']['master_log_pos']}}"
     master_user: replication 
     master_password: *
   when: inventory_hostname in groups['mysql-slave']
