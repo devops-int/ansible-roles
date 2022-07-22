@@ -2,7 +2,7 @@
 # tasks file for replication-all
 
 - name: install PyMySQL
-  pip3: name=PyMySQL state=present
+  pip: name=PyMySQL state=present
   when: inventory_hostname in groups['mysql-master']
 
   
@@ -64,6 +64,7 @@
 - name: Execute the script
   command: sh /var/backup/db/script.sh
   when: inventory_hostname in groups['mysql-master']
+  tags: cornjob
 
 # tasks file for replication-salve
 # - name: install PyMySQL
