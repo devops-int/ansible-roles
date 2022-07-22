@@ -64,7 +64,20 @@
 - name: Execute the script
   command: sh /var/backup/db/script.sh
   when: inventory_hostname in groups['mysql-master']
+  
+- name: corn job
+  ansible.builtin.cron:
+    name: "db_backup"
+    minute: "48"
+    hour: "*"
+    weekday: "*"
+    cron_file: "db_backup"
+    job: "sudo mysqldump -u root -p password Check_db|gzip > /var/backup/db/db_backup_{{date_var}}.sql.gz" 
+    user: "root"
+    state: present
+  when: inventory_hostname in groups['mysql-master']
   tags: cornjob
+
 
 # tasks file for replication-salve
 # - name: install PyMySQL
