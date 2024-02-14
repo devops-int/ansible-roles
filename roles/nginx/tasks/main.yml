@@ -1,22 +1,21 @@
 ---
 # tasks file for nginx
 
-# - name: Install nginx
-#   yum:
-#     name: nginx
-#     state: present
+- name: Install nginx
+  yum:
+    name: nginx
+    state: present
 
-# - name: Start NGiNX
-#   service:
-#     name: nginx
-#     state: started
+- name: Start NGiNX
+  service:
+    name: nginx
+    state: started
 
 - name: create a directory for csr
   file:
     path: "{{create_csr}}"
     state: directory
   tags: cert
-
 
 - name: generate a private key
   community.crypto.openssl_privatekey:
@@ -38,12 +37,7 @@
     csr_path: "{{ csr_path }}"
     provider: selfsigned
   tags: cert
-#added to the script:
-# - name: setup redirect to https
-#   copy:
-#     content: 'return 301 https://$host$request_uri;'
-#     dest: "{{dest_nginx_ngpl}}"
-  
+    
 - name: setup https server
   template:
     src: "{{src_https_server_conf_ngpl}}"
