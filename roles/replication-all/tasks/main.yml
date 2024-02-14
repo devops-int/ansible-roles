@@ -39,14 +39,6 @@
     name: "master_value_holder"
     master_log_file: "{{ information.File }}"
     master_log_pos: "{{ information.Position }}"
-
-# - name: make presistent var
-#   set_fact:
-#     information: "{{information}}"
-  
-# - name: show info
-#   debug:
-#     var: information 
   
 - name: Creates directory
   file:
@@ -78,12 +70,6 @@
   when: inventory_hostname in groups['mysql-master']
   tags: cornjob
 
-
-# tasks file for replication-salve
-# - name: install PyMySQL
-#   pip: name=PyMySQL state=present
-#   when: inventory_hostname in groups['mysql-slave']
-
 - name: stop slave 
   mysql_replication: 
     login_user: "{{root_db}}" 
@@ -102,8 +88,6 @@
     master_user: replication 
     master_password: *
   when: inventory_hostname in groups['mysql-slave']
-
-  # mysql-bin.000004 , 154
   
 - name: start slave 
   mysql_replication: 
